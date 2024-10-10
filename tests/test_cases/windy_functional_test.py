@@ -16,7 +16,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 @pytest.mark.sanity
 @allure.suite('Automated Regression Suite')
-@allure.description("This test attempts to validate some windy website features")
+@allure.description("This test attempts to validate some windy page functionalities like login and temperature display")
 class TestWindyFeatures(BaseClass):
     browser: WebDriver = None
 
@@ -67,20 +67,20 @@ class TestWindyFeatures(BaseClass):
 
         hp.get_field_search_location()
         hp.enter_search_location(test_data['Location'])
-        log.info("Entered 'Pune city' in the search location")
+        log.info(f"Entered '{test_data['Location']}' in the search location")
 
         places = hp.get_search_results()
         for place in places:
             if place.text.strip() == test_data['Location']:
                 place.click()
-                log.info("clicked on pune city option from the list")
+                log.info(f"clicked on {test_data['Location']} option from the list")
 
         self.wait_until_object_visible((By.XPATH, "//tr[contains(@class,'td-temp')]/td[1]"))
         pune_temperature = self.browser.find_element(By.XPATH, "//tr[contains(@class,'td-temp')]/td[1]")
         log.info("waited for temperature to be displayed on screen")
 
         # Validate the element is present
-        assert pune_temperature.is_displayed(), log.info("Pune temperature is not displayed on the page")
+        assert pune_temperature.is_displayed(), "Pune temperature is not displayed on the page"
         log.info("validated that temperature is displayed on screen")
 
         # Validate the temperature displayed is between range 18 to 35

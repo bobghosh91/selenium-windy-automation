@@ -76,9 +76,11 @@ class BrowserBuilder:
             # return webdriver.Remote(command_executor='http://localhost:4444/wd/hub', options=self.options)
             return webdriver.Chrome(options=self.options)
         elif self.browser_name == 'edge':
-            return webdriver.Remote(command_executor='http://localhost:4444/wd/hub', options=self.options)
+            # return webdriver.Remote(command_executor='http://localhost:4444/wd/hub', options=self.options)
+            return webdriver.Edge(options=self.options)
         elif self.browser_name == 'firefox':
-            return webdriver.Remote(command_executor='http://localhost:4444/wd/hub', options=self.options)
+            # return webdriver.Remote(command_executor='http://localhost:4444/wd/hub', options=self.options)
+            return webdriver.Firefox(options=self.options)
         else:
             raise ValueError(f"Unrecognized browser {self.browser_name}")
 
