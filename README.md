@@ -49,39 +49,38 @@ Instructions for deploying the docker-compose on remote engines like AWS EC2 are
    - Make sure to update the config.ini file with your actual email and password to avoid authentication issues during test execution.
 
 3. **Install Dependencies:**
- - Open terminal at root folder.
- - all dependencies required are stored in requirements.txt. Run the following command in terminal.
-     ```bat
-     pip install -r requirements.txt
-     ```
-     or, if in bash environment:
-     ```bash
-     pip3 install -r requirements.txt
-     ```
+   - Open terminal at root folder.
+   - all dependencies required are stored in requirements.txt. Run the following command in terminal.
+       ```bat
+       pip install -r requirements.txt
+       ```
+       or, if in bash environment:
+       ```bash
+       pip3 install -r requirements.txt
+       ```
  
-    >   **Note:** It's recommended to use Python's virtual environment `(venv)` to create an isolated environment and then install the dependencies. This is the preferred approach for managing project dependencies.
+   > **Note:** It's recommended to use Python's virtual environment `(venv)` to create an isolated environment and then install the dependencies. This is the preferred approach for managing project dependencies.
 
 4. **Run Tests:**
     ```
     python -m pytest -m "sanity or regression" --browser_name chrome tests\ --alluredir=./reports/allure-results
     ```
-    You can refer to the `run.bat` file in the root directory for additional methods to run tests and generate reports, or simply execute the file to start the tests. If you're using macOS, create a `run.sh` (bash) script to achieve the same functionality.
-
+    > You can refer to the `run.bat` file in the root directory for additional methods to run tests and generate reports, or simply execute the file to start the tests. If you're using macOS, create a `run.sh` (bash) script to achieve the same functionality.
 
 5. **Generating Allure Reports:**
-   Once the test run is completed, you can generate the Allure report using the following command:
+   - Once the test run is completed, you can generate the Allure report using the following command:
 
     ```bash
     allure generate --single-file ./reports/allure-results -o ./reports/allure-reports --clean
     ```
-    > The `--clean` flag is used to empty the allure-results folder before the next run
+   > The `--clean` flag is used to empty the allure-results folder before the next run
 
 ## Enable static website hosting on S3 bucket
     `aws s3 website s3://your-bucket-name/ --index-document index.html`
 
 ## Set the bucket policy to allow public access to the website
 ```
-{
+aws s3api put-bucket-policy --bucket your-bucket-name --policy '{
   "Version": "2012-10-17",
   "Statement":[
     {
@@ -95,9 +94,10 @@ Instructions for deploying the docker-compose on remote engines like AWS EC2 are
         "Resource": "arn:aws:s3:::your-bucket-name/*"
     }
   ]
-}
+}'
 ```
-This setup provides a custom URL that can be shared with stakeholders, allowing them to view the test results.
+This setup generates a custom URL that can be easily shared with stakeholders, enabling them to access and review the test results. 
+Ensure that the AWS CLI is installed on your machine for integration.
 
 ### Docker Compose Usage:
 

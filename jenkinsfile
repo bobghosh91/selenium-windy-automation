@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    parameters {
+        // Parameter to input the browser name, defaulting to 'edge'
+        choice(name: 'BROWSER_NAME', choices: ['edge', 'chrome', 'firefox'], description: 'Select the browser to run tests')
+        booleanParam(name: 'HEADLESS_MODE', defaultValue: false, description: 'Run tests in headless mode?')
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                script {
+                    echo 'Setting up the environment'
+                    // Install dependencies
+                    bat 'python -m venv venv'
+                    bat 'venv\\Scripts\\activate && pip install -r requirements.txt'
+
+                    // Verify AWS CLI is installed
+                    bat 'aws --version || echo "AWS CLI not installed!"'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    def headlessFlag = (params.HEADLESS_MODE) ? '--headless' : ''
+                    echo 'Running tests'
+                    // Run the tests with pytest and generate allure results
+                    bat 'venv\\Scripts\\activate && python -m pytest -m "sanity or regression" --browser_name %BROWSER_NAME% %headlessFlag% tests\\ --alluredir=./reports/allure-results'
+                }
+            }
+        }
+
+        stage('Generate Allure Report Single file') {
+            steps {
+                script {
+                    echo 'Generating Allure report'
+                    // Generate the Allure report
+                    bat 'venv\\Scripts\\activate && allure generate --single-file ./reports/allure-results -o ./reports/allure-reports --clean'
+                }
+            }
+        }
+
+        stage('Publish Allure Report') {
+            steps {
+                script {
+                    echo 'Publishing Allure Report'
+                    // Assuming allure plugin is installed in Jenkins
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        reportBuildPolicy: 'ALWAYS',
+                        report: 'reports/allure-reports',
+                        results: [[path: 'reports/allure-results']]
+                    ])
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                echo 'Cleaning up workspace'
+                // Clean up virtual environment after the build
+                bat 'rmdir /S /Q venv'
+
+                echo 'Uploading report to S3'
+                bat 'aws s3 cp --recursive reports/allure-reports s3://<bucket-name>/<folder-path>'
+
+                emailext body: '%DEFAULT_CONTENT%',
+                    subject: '%DEFAULT_SUBJECT%',
+                    to: '%DEFAULT_RECIPIENTS%'
+            }
+        }
+    }
+}

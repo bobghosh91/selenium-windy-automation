@@ -73,7 +73,7 @@ class BrowserBuilder:
 
     def get_browser(self):
         if self.browser_name == 'chrome':
-            # return webdriver.Remote(command_executor='http://localhost:4444/wd/hub', options=self.options)
+            # return webdriver.Remote(command_executor='http://192.168.0.104:4444/wd/hub', options=self.options)
             return webdriver.Chrome(options=self.options)
         elif self.browser_name == 'edge':
             # return webdriver.Remote(command_executor='http://localhost:4444/wd/hub', options=self.options)
