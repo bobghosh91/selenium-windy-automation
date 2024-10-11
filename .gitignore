@@ -26,3 +26,6 @@ atlassian-ide-plugin.xml
 # SonarLint plugin
 /.idea/sonarlint/
 /.idea/**/sonarlint/
+
+# allure results
+/reports/allure-results/
