@@ -217,7 +217,7 @@ To easily share Allure reports with stakeholders, you can upload the generated r
 
    - The steps to upload the Allure report to S3 are already included in the `Jenkinsfile`. Ensure the bucket access policy is set to public, as explained [above](#uploading-allure-report-to-s3).
 
-    > For example: http://my-bucket-name.s3.website-region.amazonaws.com
+    > For example: http://my-bucket-name.s3.website-region.amazonaws.com/index.html
 
 
 ### Contributing
