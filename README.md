@@ -1,21 +1,27 @@
-# Selenium Windy Automation
-This project automates the Windy website, showcasing various weather-related functionalities using 
-Selenium, Pytest, and other modern Python utilities. 
-The framework is built with simplicity, re-usability, and scalability in mind.
-
 ## Table of Contents
-1. [Selenium Windy Automation](#selenium-windy-automation)
+1. [Introduction](#selenium-windy-automation)
 2. [Key Features](#key-features)
    - [Browser Invocation (Builder Pattern)](#browser-invocation-builder-pattern)
    - [Custom Logger](#custom-logger)
    - [Parameterized Testing](#parameterized-testing)
+   - [Allure Report Integration](#allure-reporting-integration)
    - [Docker Compose](#docker-compose)
-3. [Setup Instructions](#setup-instructions)
-4. [Docker Compose Usage](#docker-compose-usage)
-5. [Deploying Docker Compose on AWS EC2](#deploying-docker-compose-on-aws-ec2)
+3. [Prerequisites](#prerequisites)
+4. [Setup Instructions](#setup-instructions)
+5. [Docker Compose Usage](#docker-compose-usage)
+6. [Deploying Docker Compose on AWS EC2](#deploying-docker-compose-on-aws-ec2)
+7. [Uploading Allure Report to S3](#uploading-allure-report-to-s3)
+8. [Contributing](#contributing)
 
 
+# Selenium Windy Automation
+This project automates the Windy website, showcasing various weather-related functionalities using 
+Selenium, Pytest, and other modern Python utilities. 
+The framework is built with simplicity, re-usability, and scalability in mind.
+---
 ## Key Features
+
+---
 ### Browser Invocation (Builder Pattern):
 The browser instantiation is managed using the Builder Pattern, enhancing code readability and maintainability. 
 This design allows the framework to switch easily between Chrome, Edge, and Firefox, minimizing code duplication. 
@@ -36,12 +42,48 @@ Parameterization is demonstrated using both:
  - *openpyxl*: 
    - To handle parameterization from Excel files, making it easy to manage test data for multiple test cases dynamically.
 
+### Allure Reporting Integration:
+
+`Allure Reports` have been integrated into the framework to provide visually rich and interactive test reports. 
+It helps track test execution history, view detailed step-by-step test results, and debug failures more efficiently.
+Allure reports can be generated post-test execution, providing stakeholders with easy access to the results in an intuitive format.
+
 ### Docker Compose:
 
 `docker-compose` and `dynamic-docker-compose` configurations have been added to the project, allowing you to choose between these setups based on your preference.
 Instructions for deploying the docker-compose on remote engines like AWS EC2 are included below.
 
+## Prerequisites
+
+---
+Before setting up and running the project, ensure you have the following installed:
+
+1. **Python:** (<u>strictly version 3.10 and above</u>)
+2. **pip:**
+   - Comes with Python 3.x installations. Verify it using:
+     ```bash
+     pip --version
+     ```
+3. **Allure Command Line**
+   - Used for generating and viewing Allure reports.
+   - Install via the command line:
+     - For MacOS:
+       ```bash
+       brew install allure
+       ```
+     - For Windows: Download the [Allure Commandline](https://docs.qameta.io/allure/#_installing_a_commandline) and follow the installation steps.
+
+4. **Docker** and **Docker Compose** (for running the Docker setup)
+   - Install Docker and Docker-Compose from their [official](https://docs.docker.com/) website.
+
+5. **AWS CLI** (for uploading reports to S3, optional)
+   - You can install the AWS CLI from [AWS CLI Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html).
+
+Ensure that all dependencies are installed before proceeding to the [Setup Instructions](#setup-instructions).
+
 ## Setup Instructions
+
+---
 1. **Clone or Download the Repository:**
    - Clone or download the repo and open in any IDE of choice(pycharm preferred).
 2. **Replace Credentials:**
@@ -99,8 +141,9 @@ aws s3api put-bucket-policy --bucket your-bucket-name --policy '{
 This setup generates a custom URL that can be easily shared with stakeholders, enabling them to access and review the test results. 
 Ensure that the AWS CLI is installed on your machine for integration.
 
-### Docker Compose Usage:
+## Docker Compose Usage:
 
+---
 - You can deploy this project using Docker Compose, allowing easy setup of testing environments:
   * `docker-compose.yml`: Standard Docker compose file.
   * `dynamic-docker-compose.yml`: Enhanced version with dynamic configurations.
@@ -110,20 +153,65 @@ Ensure that the AWS CLI is installed on your machine for integration.
 
     **Ensure to use `webdriver.Remote` when running tests in a remote environment.**
 
-### Deploying Docker Compose on AWS EC2:
+## Deploying Docker Compose on AWS EC2:
+
+---
 To deploy your Docker Compose setup on an AWS EC2 instance, follow these steps:
-1. **SSH into your EC2 Instance:** Connect to your EC2 instance via SSH. Ensure Docker and Docker Compose are pre-installed on your instance.
-2. **Copy the Docker Compose File:** Copy the chosen docker-compose file to instance root:
+1. **Copy the Docker Compose File:** Copy the chosen docker-compose file to instance root:
     ```bash
     scp -i /path/to/your-key.pem /path/to/your-file.yml ubuntu@ec2-instance-public-ip:/destination`
     ```
+2. **SSH into your EC2 Instance:** Connect to your EC2 instance via SSH. Ensure Docker and Docker Compose are pre-installed on your instance.
+    ```bash
+    ssh -i /path/to/your-key.pem ubuntu@ec2-public-ip
+    ```
+   
 3. **Run the Docker Compose:** Once transferred, run the following command on the EC2 instance:
     ```bash
     docker-compose -f docker-compose.yml up -d`
     ```
 4. **Update WebDriver URL:** Make sure to replace `http://localhost:4444/wd/hub` with the actual URL of your remote WebDriver server. For example `http://<ec2-ip-address>:<port>`
 
+5. **Running Tests from Jenkins**:
+    - From your Jenkins pipeline, ensure the remote WebDriver URL is correctly configured to point to the EC2 instance.
+    - Trigger the Jenkins job to run tests remotely on the AWS EC2 instance.
+
 You can now run the tests remotely on your EC2 instance.
+
+### Running Tests in Jenkins
+
+---
+This project includes a ready-to-use Jenkins pipeline configuration to automate test execution.
+Follow these steps to set up and run tests using Jenkins:
+
+### Prerequisites for Jenkins
+1. **Jenkins Installation**: Ensure Jenkins is installed and running on your system or server. Refer to the official Jenkins installation guide for setup instructions.
+2. **Jenkins Plugins**: Make sure the following plugins are installed:
+   - Allure Jenkins Plugin (for Allure reporting)
+   - Docker Pipeline Plugin (for Docker Compose execution)
+   - SSH Agent Plugin (for deploying on AWS EC2)
+   - Python Plugin (if you’re executing Python scripts directly)
+   
+### Configuring the Jenkins Pipeline
+
+1. **Add the Jenkinsfile**: Copy the content of  `Jenkinsfile` from the project’s root directory into your Jenkins job. The pipeline job is already configured with steps to run tests, generate Allure reports, and archive the results.
+   
+2. **Pipeline Job Execution**:
+    - After setting up your pipeline, trigger the job manually or set up a schedule for automated runs.
+    - The tests will execute based on the configurations provided, and Allure reports will be generated for visual representation of the results.
+    
+3. **Viewing Results**:
+   - Once the job is complete, you can view the Allure reports directly in Jenkins.
+   - Navigate to the `Allure Report` link in the Jenkins build console.
+
+---
+
+## Uploading Allure Report to S3
+
+---
+Once the tests are completed and the Allure report is generated, you can upload the single-file Allure report to an S3 bucket for easy sharing and access.
+
+- The steps to upload the Allure report to S3 are already included in the `Jenkinsfile`. Ensure the bucket access policy is set to public, as explained [above](#set-the-bucket-policy-to-allow-public-access-to-the-website).
 
 ### Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests.
