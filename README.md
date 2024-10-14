@@ -117,29 +117,6 @@ Ensure that all dependencies are installed before proceeding to the [Setup Instr
     ```
    > The `--clean` flag is used to empty the allure-results folder before the next run
 
-## Enable static website hosting on S3 bucket
-    `aws s3 website s3://your-bucket-name/ --index-document index.html`
-
-## Set the bucket policy to allow public access to the website
-```
-aws s3api put-bucket-policy --bucket your-bucket-name --policy '{
-  "Version": "2012-10-17",
-  "Statement":[
-    {
-        "Sid": "AllowPublicReadAccess",
-        "Effect": "Allow",
-        "Principal": "*",
-        "Action": [
-            "s3:GetObject",
-            "s3:GetObjectVersion"
-        ],
-        "Resource": "arn:aws:s3:::your-bucket-name/*"
-    }
-  ]
-}'
-```
-This setup generates a custom URL that can be easily shared with stakeholders, enabling them to access and review the test results. 
-Ensure that the AWS CLI is installed on your machine for integration.
 
 ## Docker Compose Usage:
 
@@ -204,14 +181,44 @@ Follow these steps to set up and run tests using Jenkins:
    - Once the job is complete, you can view the Allure reports directly in Jenkins.
    - Navigate to the `Allure Report` link in the Jenkins build console.
 
----
-
 ## Uploading Allure Report to S3
 
 ---
-Once the tests are completed and the Allure report is generated, you can upload the single-file Allure report to an S3 bucket for easy sharing and access.
+To easily share Allure reports with stakeholders, you can upload the generated report to an S3 bucket and enable public access via a static website. Follow these steps to configure S3 for hosting and sharing your Allure report.
 
-- The steps to upload the Allure report to S3 are already included in the `Jenkinsfile`. Ensure the bucket access policy is set to public, as explained [above](#set-the-bucket-policy-to-allow-public-access-to-the-website).
+1. Enable Static Website Hosting
+   -    First, enable static website hosting on your S3 bucket. This will allow the report to be accessed via a public URL.
+
+    ```bash
+    aws s3 website s3://your-bucket-name/ --index-document index.html
+    ```
+
+2. Set Public Access Policy
+    ```bash
+   aws s3api put-bucket-policy --bucket your-bucket-name --policy '{
+    "Version": "2012-10-17",
+    "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion"
+      ],
+      "Resource": "arn:aws:s3:::your-bucket-name/*"
+    }
+    ]
+    }'
+    ```
+
+3. Share the URL:
+   - Once the tests are completed and the Allure report is generated, you can upload the single-file Allure report to an S3 bucket for easy sharing and access.
+
+   - The steps to upload the Allure report to S3 are already included in the `Jenkinsfile`. Ensure the bucket access policy is set to public, as explained [above](#uploading-allure-report-to-s3).
+
+    > For example: http://my-bucket-name.s3.website-region.amazonaws.com
+
 
 ### Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests.
