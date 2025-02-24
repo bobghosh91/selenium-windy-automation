@@ -17,7 +17,7 @@
 # Selenium Windy Automation
 This project automates the Windy website, showcasing various weather-related functionalities using 
 Selenium, Pytest, and other modern Python utilities. 
-The framework is built with simplicity, re-usability, and scalability in mind.
+The framework is built with simplicity, re-usability, and scalability in mind. Additionally, the framework also demonstrates hosting Allure Report in AWS S3.
 ---
 ## Key Features
 
