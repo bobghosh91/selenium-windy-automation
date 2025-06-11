@@ -1,3 +1,4 @@
+import time
 import allure
 import pytest
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -31,7 +32,7 @@ class TestWindyFeatures(BaseClass):
     @allure.title("Verify the co-ordinates shown in windy url represents India or any other country")
     @pytest.mark.parametrize("expected_country", ["India"])
     def test_geo_coordinates_is_displayed_in_windy(self, expected_country):
-
+        time.sleep(3)
         log = CustomLogger().get_logger()
 
         current_url = self.browser.current_url
@@ -57,6 +58,4 @@ class TestWindyFeatures(BaseClass):
 
         assert expected_country == actual_country, f"Expected {expected_country} but found {actual_country}"
         log.info("Verified both expected and actual countries matches")
-
-
 

@@ -75,8 +75,8 @@ class TestWindyFeatures(BaseClass):
                 place.click()
                 log.info(f"clicked on {test_data['Location']} option from the list")
 
-        self.wait_until_object_visible((By.XPATH, "//tr[contains(@class,'td-temp')]/td[1]"))
-        pune_temperature = self.browser.find_element(By.XPATH, "//tr[contains(@class,'td-temp')]/td[1]")
+        self.wait_until_object_visible((By.XPATH, "//tr[contains(@class,'tr--temp')]/td[1]"))
+        pune_temperature = self.browser.find_element(By.XPATH, "//tr[contains(@class,'tr--temp')]/td[1]")
         log.info("waited for temperature to be displayed on screen")
 
         # Validate the element is present
