@@ -7,10 +7,10 @@ from pageObjects.BasePage import BasePage
 
 class HomePage(BasePage):
     __field_search_location = (By.CSS_SELECTOR, "#q")
-    __button_main_menu = (By.XPATH, "//*[@id='plugin-rhpane-top']/*/*[text()='Menu']")
+    __button_main_menu = (By.XPATH, "//*[@id='plugin-rhpane-top']//*[text()='Menu']")
     __button_windy_logo = (By.CSS_SELECTOR, "#logo")
     __button_login = (
-        By.XPATH, "//*[translate(@data-t, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='just_login']")
+        By.XPATH, "//*[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login')]")
     __div_success_login_msg = (By.ID, "window-message-loggin-ok")
     __list_search_result = (By.CSS_SELECTOR, "#plugin-search a")
 

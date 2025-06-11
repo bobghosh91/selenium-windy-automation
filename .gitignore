@@ -29,3 +29,6 @@ atlassian-ide-plugin.xml
 
 # allure results
 /reports/allure-results/
+
+# dynamic grid assets-videos
+**/assets/

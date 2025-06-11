@@ -28,7 +28,7 @@ class AppSpecificUtils(BaseClass):
         match switch:
             case "celsius":
                 get_switch_status = self.browser.find_element(By.XPATH,
-                                                              "//td[text()='Temperature']/parent::*//a[contains(@data-do,'C')]")
+                                                              "//td[text()='Temperature']/parent::*//a[text()='°C']")
                 get_switch_attribute = get_switch_status.get_attribute("class")
                 if "selected" in get_switch_attribute:
                     self.log.info("celsius is already selected")
@@ -42,7 +42,7 @@ class AppSpecificUtils(BaseClass):
 
             case "fahrenheit":
                 get_switch_status = self.browser.find_element(By.XPATH,
-                                                              "//td[text()='Temperature']/parent::*//a[contains(@data-do,'F')]")
+                                                              "//td[text()='Temperature']/parent::*//a[text()='°F']")
                 get_switch_attribute = get_switch_status.get_attribute("class")
                 if "selected" in get_switch_attribute:
                     self.log.info("fahrenheit is already selected")

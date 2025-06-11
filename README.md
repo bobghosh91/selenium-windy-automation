@@ -6,6 +6,7 @@
    - [Parameterized Testing](#parameterized-testing)
    - [Allure Report Integration](#allure-reporting-integration)
    - [Docker Compose](#docker-compose)
+   - 🆕 [**Dynamic Grid Docker** - *New!*](#Dynamic-Grid)
 3. [Prerequisites](#prerequisites)
 4. [Setup Instructions](#setup-instructions)
 5. [Docker Compose Usage](#docker-compose-usage)
@@ -52,6 +53,13 @@ Allure reports can be generated post-test execution, providing stakeholders with
 
 `docker-compose` and `dynamic-docker-compose` configurations have been added to the project, allowing you to choose between these setups based on your preference.
 Instructions for deploying the docker-compose on remote engines like AWS EC2 are included below.
+
+### Dynamic Grid:
+![New Feature](https://img.shields.io/badge/NEW-Dynamic%20Grid%20Docker-brightgreen)
+</br>Selenium 4 has introduced another grid feature called Dynamic grid which is exactly what it sounds like, a hub & node grid that can grow and shrink dynamically as needed for your browser testing needs.
+To start a dynamic grid run the `docker-compose-dynamic-grid.yml` file and direct your tests towards it by using _webdriver.Remote()_.
+Dynamic grid also contains video recording capabilities which means the tests will be recorded as they execute in the container.
+>NOTE - A folder _assets/session_id_ will be created in the repository root folder, in which the videos will be made available.
 
 ## Prerequisites
 
@@ -222,5 +230,8 @@ To easily share Allure reports with stakeholders, you can upload the generated r
 
 ### Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests.
+
+![New Feature](https://img.shields.io/badge/NEW-Dynamic%20Grid%20Docker-brightgreen)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)
 
 Happy Testing!
