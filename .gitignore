@@ -29,6 +29,12 @@ atlassian-ide-plugin.xml
 
 # allure results
 /reports/allure-results/
+/reports/allure-reports/
+/reports/*.html
+
+# Runtime output
+/logs/*.log
+/screenshots/
 
 # dynamic grid assets-videos
 **/assets/

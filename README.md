@@ -94,9 +94,10 @@ Ensure that all dependencies are installed before proceeding to the [Setup Instr
 ---
 1. **Clone or Download the Repository:**
    - Clone or download the repo and open in any IDE of choice(pycharm preferred).
-2. **Replace Credentials:**
+2. **Configure Credentials:**
    - Create a free account on [windy.com](https://windy.com).
-   - Make sure to update the config.ini file with your actual email and password to avoid authentication issues during test execution.
+   - Set `WINDY_EMAIL` and `WINDY_PASSWORD` in the shell or CI secret store. Credentials are intentionally not stored in `configs/config.ini`.
+   - `configs/config.example.ini` documents the non-secret configuration.
 
 3. **Install Dependencies:**
    - Open terminal at root folder.
