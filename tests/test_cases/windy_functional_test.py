@@ -1,6 +1,3 @@
-import base64
-import pdb
-import time
 import allure
 import pytest
 from selenium.webdriver.common.by import By
@@ -33,8 +30,10 @@ class TestWindyFeatures(BaseClass):
 
         config_data = read_config()
         email = config_data['email']
-        encoded_password = config_data['password']
-        password = base64.b64decode(encoded_password).decode()
+        password = config_data['password']
+
+        if not email or not password:
+            pytest.skip("Set WINDY_EMAIL and WINDY_PASSWORD to run the login test")
 
         lp.type_email_address(email)
         log.info(f"Entered {email} into the 'email address' field")

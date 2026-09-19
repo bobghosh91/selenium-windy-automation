@@ -1,8 +1,5 @@
-import base64
 import json
 import os.path
-import pdb
-import time
 import warnings
 import allure
 import pytest
@@ -22,14 +19,14 @@ def pytest_addoption(parser):
 
 
 # change scope to 'function' launch browser for each function
-@pytest.fixture(scope='class')
+@pytest.fixture(scope='function')
 def browser_name(request):
     name = request.config.getoption('--browser_name')
     with allure.step(f"Selected browser: {name}"):
         return name
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope='function')
 def headless(request):
     hmode = request.config.getoption('--headless')
     with allure.step(f"Selected headless mode: {hmode}"):
@@ -80,7 +77,7 @@ def create_categories_json():
 
 
 @allure.title("Setting up for the test")
-@pytest.fixture(scope='class', autouse=True)
+@pytest.fixture(scope='function', autouse=True)
 def setup(request, browser_name, headless):
     # print('setup')
     config_data = read_config()
@@ -97,8 +94,11 @@ def setup(request, browser_name, headless):
     # Set implicit wait
     browser.implicitly_wait(15)
 
-    # Attach the browser instance to the class
-    request.cls.browser = browser
+    # Attach the isolated browser instance to the test class for existing tests.
+    # A new instance is created for every test function, so tests cannot leak
+    # login, location, or settings state into one another.
+    if request.cls is not None:
+        request.cls.browser = browser
     browser.get(base_url)
 
     yield browser
@@ -119,8 +119,9 @@ def pytest_runtest_makereport(item, call):
 
     if (rep.when == 'call' or rep.when == 'setup') and (rep.failed or rep.skipped):
         # Only take a screenshot if the test failed during the call phase
-        browser = item.funcargs['setup']
-        allure.attach(browser.get_screenshot_as_png(), name="screenshot", attachment_type=allure.attachment_type.PNG)
+        browser = item.funcargs.get('setup')
+        if browser is not None:
+            allure.attach(browser.get_screenshot_as_png(), name="screenshot", attachment_type=allure.attachment_type.PNG)
 
 
 def pytest_configure(config):
